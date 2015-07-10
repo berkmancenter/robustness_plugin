@@ -4,6 +4,7 @@ var test = function(url) {
 	this.url = url;
 	this.state = 'waiting';
 	this.data = {};
+	this.date = new Date();
 	var that = this;
 
 	var receiveListener = function(details) {
@@ -34,10 +35,7 @@ var test = function(url) {
 		console.log(this.data.receivedHeaderDetails.statusCode + ": " + this.data.receivedHeaderDetails.url);
 	};
 
-	this.commence = function(callback) {
-		this.callback = callback;
-		//console.log('commence testing ' + this.url);
-
+	this.commence = function() {
 		chrome.webRequest.onHeadersReceived.addListener(
 			receiveListener,
 			{ urls: [this.url] },
