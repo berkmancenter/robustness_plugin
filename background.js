@@ -1,10 +1,13 @@
 var objs = new Array();
 
-var test = function(url) {
+var globalCounter = 0;
+
+var test = function(url, total) {
 	this.url = url;
 	this.state = 'waiting';
 	this.data = {};
 	this.date = new Date();
+	this.total = total;
 	var that = this;
 
 	var receiveListener = function(details) {
@@ -14,6 +17,7 @@ var test = function(url) {
 	};
 
 	this.onReceiveHeaders = function() {
+		globalCounter++;
 		this.state = 'complete';
 		//this.iframe.remove();
 		var removeCode = "var theFrame = document.getElementById('" + this.url + "');";
@@ -32,6 +36,13 @@ var test = function(url) {
 	};
 
 	this.onComplete = function() {
+		console.log(globalCounter);
+		if(globalCounter == this.total - 10) {
+			console.log("Estimaed comlete time.");
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			    chrome.tabs.sendMessage(tabs[0].id, {action: "open_dialog_box"}, function(response) {});  
+			});
+		}
 		console.log(this.data.receivedHeaderDetails.statusCode + ": " + this.data.receivedHeaderDetails.url);
 	};
 
@@ -62,7 +73,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	//console.log(linkArray);
 	for(var l = 0; l < linkArray.length; l++) {
 		if(linkArray[l]) {
-			objs[l] = new test(linkArray[l]);
+			objs[l] = new test(linkArray[l], linkArray.length);
 			objs[l].commence();
 		}
 	}
