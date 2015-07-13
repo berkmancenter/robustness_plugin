@@ -1,7 +1,5 @@
 var objs = new Array();
 
-var globalCounter = 0;
-
 var test = function(url, total) {
 	this.url = url;
 	this.state = 'waiting';
@@ -17,7 +15,6 @@ var test = function(url, total) {
 	};
 
 	this.onReceiveHeaders = function() {
-		globalCounter++;
 		this.state = 'complete';
 		//this.iframe.remove();
 		var removeCode = "var theFrame = document.getElementById('" + this.url + "');";
@@ -36,17 +33,10 @@ var test = function(url, total) {
 	};
 
 	this.onComplete = function() {
-		console.log(globalCounter);
-		if(globalCounter == this.total - 10) {
-			console.log("Estimaed comlete time.");
-			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			    chrome.tabs.sendMessage(tabs[0].id, {action: "open_dialog_box"}, function(response) {});  
-			});
-		}
 		console.log(this.data.receivedHeaderDetails.statusCode + ": " + this.data.receivedHeaderDetails.url);
 	};
 
-	this.commence = function() {
+	this.commence = function(tab) {
 		chrome.webRequest.onHeadersReceived.addListener(
 			receiveListener,
 			{ urls: [this.url] },
@@ -60,7 +50,7 @@ var test = function(url, total) {
 		code += 'linktest_frame.style.display = "none";';
 		code += 'linktest_frame.setAttribute("id", "' + this.url + '");'
 		code += 'document.body.appendChild(linktest_frame);';
-
+		
 		chrome.tabs.executeScript({
 		    code: code
 		});
@@ -74,7 +64,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	for(var l = 0; l < linkArray.length; l++) {
 		if(linkArray[l]) {
 			objs[l] = new test(linkArray[l], linkArray.length);
-			objs[l].commence();
+			if (sender.tab.url.indexOf("chrome-devtools://") == -1 && sender.tab.url.indexOf("chrome-extension://") == -1) {
+				objs[l].commence(sender.tab.url);
+			}
 		}
 	}
 });
