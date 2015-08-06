@@ -1,6 +1,7 @@
 var objs = new Array();
 
 var test = function(url, total) {
+	
 	this.url = url;
 	this.state = 'waiting';
 	this.data = {};
@@ -16,7 +17,6 @@ var test = function(url, total) {
 
 	this.onReceiveHeaders = function() {
 		this.state = 'complete';
-		//this.iframe.remove();
 		var removeCode = "var theFrame = document.getElementById('" + this.url + "');";
 		removeCode += "theFrame.parentNode.removeChild(theFrame);";
 		chrome.tabs.executeScript({

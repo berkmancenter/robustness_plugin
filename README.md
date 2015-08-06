@@ -1,6 +1,6 @@
-# Link Tester
+# Robustness Plugin
 
-TODO: Update the project description
+Prototype. Checks the HTTP status codes of every link on the user's current webpage. Codes are printed into the Chrome background page console which can be accessed via the chrome://extensions page. 
 
 ## Installation
 

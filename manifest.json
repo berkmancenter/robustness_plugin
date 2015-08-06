@@ -1,12 +1,11 @@
 {
-	"update_url": "http://clients2.google.com/service/update2/crx",
-    "name": "Link Tester",
-    "version": "0.0.1",
-    "manifest_version": 2,
-    "description": "Link tester.",
+	"name": "Robustness Plugin",
+	"version": "0.1",
+	"manifest_version": 2,
+	"description": "Berkman Center internet robustness browser plugin to check the HTTP status codes of links on a webpage.",
 	"permissions": [
-	          "storage", "activeTab", "tabs", "webRequest", "http://*/*", "https://*/*"
-	        ],
+		"storage", "activeTab", "tabs", "webRequest", "http://*/*", "https://*/*"
+	],
 	"background": {
 		"scripts": ["background.js"],
 		"persistent": true

@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	var links = document.getElementsByTagName("a");
-	var isAll = false;
+	// Flags whether to test every unique link or just unique hosts
+	var isAll = true;
 	var uniqueLinks = "";
  	var isURL = new RegExp('^(https?:\\/\\/)?'+ // protocol
     	'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -24,6 +25,5 @@ $(document).ready(function() {
 			}
 		}
 	}
-	chrome.runtime.sendMessage({data: uniqueLinks}, function(response) {
-	});
+	chrome.runtime.sendMessage({data: uniqueLinks});
 })
